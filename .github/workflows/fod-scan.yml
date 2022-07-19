@@ -72,20 +72,38 @@ jobs:
       - name: Perform SAST Scan
         run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl $FOD_API_URL -purl $FOD_URL -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" $FOD_UPLOADER_OPTS -n "$FOD_UPLOADER_NOTES"
         env:
-          FOD_URL: "https://ams.fortify.com/"
-          FOD_API_URL: "https://api.ams.fortify.com/"
+          #FOD_URL: "https://ams.fortify.com/"
+          #FOD_API_URL: "https://api.ams.fortify.com/"
+          #FOD_TENANT: ${{ secrets.FOD_TENANT }}
+          #FOD_USER: ${{ secrets.FOD_USER }}
+          #FOD_PAT: ${{ secrets.FOD_PAT }}
+          #FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }}
+          #FOD_UPLOADER_OPTS: "-ep 2 -pp 0 -I 1 -apf"
+          #FOD_UPLOADER_NOTES: 'Triggered by GitHub Actions (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+          FOD_URL: ${{ secrets.FOD_URL }}
+            #e.g. https://ams.fortify.com/ - note trailing slashFOD_TENANT: ${{ secrets.FOD_TENANT }}
+          FOD_API_URL: ${{ secrets.FOD_API_URL }}
+            #e.g. https://api.ams.fortify.com/ - note trailing slash
           FOD_TENANT: ${{ secrets.FOD_TENANT }}
           FOD_USER: ${{ secrets.FOD_USER }}
           FOD_PAT: ${{ secrets.FOD_PAT }}
+            # Using the PAT "Hans-PAT-ALLSCOPES"
           FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }}
+            #e.g. 463963 for riches.JAVA.JULY2022 on franklinbank tenant
+		      FOD_API_KEY: ${{ secrets.FOD_API_KEY }}
+			      # user "Hans-SecurityLead"
           FOD_UPLOADER_OPTS: "-ep 2 -pp 0 -I 1 -apf"
+            # reference options - https://ams.fortify.com/Docs/en/index.htm#Tools/FoD_Uploader/BSI_Running.htm
+            # -I is the polling interval, 0=no polling - TODO - investigate FOD webhooks set-up for alternative...
+			      # -ep 2 = Subscription Scan
           FOD_UPLOADER_NOTES: 'Triggered by GitHub Actions (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})'
 
       # Once scan completes, pull SAST issues from Fortify on Demand and generate SARIF output.
       - name: Export results to GitHub-optimized SARIF
         uses: fortify/gha-export-vulnerabilities@fcb374411cff9809028c911dabb8b57dbdae623b
         with:
-          fod_base_url: "https://ams.fortify.com/"
+          fod_base_url: ${{ secrets.FOD_URL }}
+            #fod_base_url: "https://ams.fortify.com/"
           fod_tenant: ${{ secrets.FOD_TENANT }}
           fod_user: ${{ secrets.FOD_USER }}
           fod_password: ${{ secrets.FOD_PAT }}
