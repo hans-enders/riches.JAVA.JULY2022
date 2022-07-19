@@ -90,8 +90,8 @@ jobs:
             # Using the PAT "Hans-PAT-ALLSCOPES"
           FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }}
             #e.g. 463963 for riches.JAVA.JULY2022 on franklinbank tenant
-		      FOD_API_KEY: ${{ secrets.FOD_API_KEY }}
-			      # user "Hans-SecurityLead"
+	  FOD_API_KEY: ${{ secrets.FOD_API_KEY }}
+	    # user "Hans-SecurityLead"
           FOD_UPLOADER_OPTS: "-ep 2 -pp 0 -I 1 -apf"
             # reference options - https://ams.fortify.com/Docs/en/index.htm#Tools/FoD_Uploader/BSI_Running.htm
             # -I is the polling interval, 0=no polling - TODO - investigate FOD webhooks set-up for alternative...
